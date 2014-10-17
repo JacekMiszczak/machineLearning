@@ -1,0 +1,39 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'maven'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+group = 'com.github.ML'
+version = '0.1-SNAPSHOT'
+
+// mainClassName = "pl.webscrapers.grequests.examples.SessionCaching"
+
+repositories {
+    mavenCentral()
+    maven { url 'http://repo.springsource.org/libs-snapshot' }
+}
+
+
+dependencies {
+    // Common dependencies
+    compile 'org.codehaus.groovy:groovy-all:2.3.6'
+    compile 'org.slf4j:slf4j-api:1.7.2'
+
+    runtime 'org.slf4j:slf4j-log4j12:1.7.2'
+
+    compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.11'
+
+    testCompile 'junit:junit:4.11'
+    testRuntime 'org.slf4j:slf4j-log4j12:1.7.2'
+}
+
+test {
+    useJUnit()
+}
+
+task wrapper(type: Wrapper){
+    gradleVersion = '1.12'
+}
