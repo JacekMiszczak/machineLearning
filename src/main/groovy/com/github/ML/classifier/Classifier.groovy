@@ -1,4 +1,4 @@
-package com.github.ML.algorithm
+package com.github.ML.classifier
 
 
 public interface Classifier {
