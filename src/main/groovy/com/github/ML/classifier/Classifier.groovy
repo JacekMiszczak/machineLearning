@@ -1,8 +1,17 @@
 package com.github.ML.classifier
 
+import com.github.ML.data.DataSet
+import com.github.ML.data.Instance
+
 
 public interface Classifier {
 
-    // todo: should be similar to WEKA's one, with build(instances) and classify(instance) separately
+    public void buildClassifier(DataSet dataSet)
+
+    public List<Number> classify(List<Instance> instances)
+
+    public Number classify(Instance instance)
+
+
 
 }

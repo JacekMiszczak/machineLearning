@@ -37,4 +37,8 @@ public class DataSet {
         }
         distribution
     }
+
+    int getNumClasses(){
+        (descriptors[classAttributeIndex] as DiscreteDescriptor).possibleValues.size()
+    }
 }

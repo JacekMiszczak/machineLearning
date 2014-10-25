@@ -1,8 +1,7 @@
 package com.github.ML.data.descriptor
 
 import com.github.ML.data.AttributeType
-import com.github.ML.data.attribute.Attribute
-import com.github.ML.data.attribute.DiscreteAttribute
+import com.github.ML.data.Attribute
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -11,8 +10,8 @@ class DiscreteDescriptor extends AbstractDescriptor {
     List<String> possibleValues
 
     @Override
-    Attribute buildAttribute(Object value) {
-        return new DiscreteAttribute((value as Number), this)
+    Attribute buildAttribute(Number value) {
+        return new Attribute(value, this)
     }
 
     @Override
@@ -20,11 +19,11 @@ class DiscreteDescriptor extends AbstractDescriptor {
         AttributeType.DISCRETE
     }
 
-    String toStringValue(int value){
-        possibleValues[value]
+    String toStringValue(Number value){
+        possibleValues[value.intValue()]
     }
 
-    int toIntValue(String value){
-        possibleValues.findIndexOf {it == value}
+    Number toNumberValue(String value){
+        new Integer(possibleValues.findIndexOf {it == value})
     }
 }

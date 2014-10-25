@@ -85,10 +85,7 @@ class ARFFLoader implements Loader {
         out.dataSet = dataSet
         split.eachWithIndex{ String entry, int i ->
             Descriptor descriptor = dataSet.descriptors[i]
-            if (descriptor.attributeType == AttributeType.NUMERICAL)
-                out.attributes.add(entry)
-            else if (descriptor.attributeType == AttributeType.DISCRETE)
-                out.attributes.add((descriptor as DiscreteDescriptor).toIntValue(entry))
+            out.attributes.add(descriptor.toNumberValue(entry))
         }
         return out
     }
