@@ -1,8 +1,10 @@
 package com.github.ML.data
 
+import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 
 @CompileStatic
+@Canonical
 public class Instance {
 
     DataSet dataSet
@@ -20,5 +22,12 @@ public class Instance {
         attributes[dataSet.classAttributeIndex] as int
     }
 
+    public Instance copy(){
+        Instance out = new Instance(this.dataSet)
+        this.attributes.each { Number it ->
+            out.attributes.add(it)
+        }
+        out
+    }
 
 }

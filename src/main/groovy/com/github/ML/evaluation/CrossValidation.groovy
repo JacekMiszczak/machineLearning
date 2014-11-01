@@ -29,7 +29,7 @@ class CrossValidation{
         }
 
         dataSet.eachWithIndex { Instance instance, int i ->
-            folds[i % numFolds].add(instance)
+            folds[i % numFolds].addInstance(instance.copy())
         }
 
         folds

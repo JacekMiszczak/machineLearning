@@ -13,6 +13,17 @@ public class DataSet implements List<Instance> {
 
     String name
 
+    void addInstance(Instance instance){
+        instance.dataSet = this
+        instances.add(instance)
+    }
+
+    void addInstances(List<Instance> instaces){
+        instaces.each{ Instance it ->
+            addInstance(it)
+        }
+    }
+
 
     void setClassAttributeIndex(int index){
         descriptors.each {it.classAttribute = false}
@@ -52,10 +63,25 @@ public class DataSet implements List<Instance> {
         out
     }
 
+    DataSet copy(){
+        DataSet out = copyStructure()
+        instances.each { Instance it ->
+            out.addInstance(it.copy())
+        }
+        out
+    }
+
     DataSet plus(DataSet other){
         DataSet out = this.copyStructure()
-        out.addAll(instances)
-        out.addAll(other.instances)
+        out.addInstances(instances)
+        out.addInstances(other.instances)
         out
+    }
+
+    List<Number> getUniqueValuesOf(int index){
+        List<Number> out = instances.collect { Instance it ->
+            it.attributes[index]
+        }
+        out.unique().toList()
     }
 }
