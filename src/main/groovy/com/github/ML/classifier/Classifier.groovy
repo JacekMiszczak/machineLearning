@@ -6,11 +6,9 @@ import com.github.ML.data.Instance
 
 public interface Classifier {
 
-    public void buildClassifier(DataSet dataSet)
+    public List<Integer> classify(List<Instance> instances)
 
-    public List<Number> classify(List<Instance> instances)
-
-    public Number classify(Instance instance)
+    public int classify(Instance instance)
 
 
 

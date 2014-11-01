@@ -5,8 +5,9 @@ import com.github.ML.data.descriptor.DiscreteDescriptor
 import groovy.transform.CompileStatic
 
 @CompileStatic
-public class DataSet {
+public class DataSet implements List<Instance> {
 
+    @Delegate
     final List<Instance> instances = []
     final List<Descriptor> descriptors = []
 
@@ -40,5 +41,21 @@ public class DataSet {
 
     int getNumClasses(){
         (descriptors[classAttributeIndex] as DiscreteDescriptor).possibleValues.size()
+    }
+
+    DataSet copyStructure(){
+        DataSet out = new DataSet()
+        out.name = name
+        descriptors.each{ Descriptor it ->
+            out.descriptors.add(it)
+        }
+        out
+    }
+
+    DataSet plus(DataSet other){
+        DataSet out = this.copyStructure()
+        out.addAll(instances)
+        out.addAll(other.instances)
+        out
     }
 }

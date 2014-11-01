@@ -1,4 +1,4 @@
-package com.github.ML.tester
+package com.github.ML.evaluation
 
 
 class Evaluation {

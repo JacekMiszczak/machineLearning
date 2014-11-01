@@ -16,5 +16,9 @@ public class Instance {
         getAttributeAt(dataSet.classAttributeIndex)
     }
 
+    public int getClassAttributeValue(){
+        attributes[dataSet.classAttributeIndex] as int
+    }
+
 
 }
