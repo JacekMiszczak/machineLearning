@@ -12,6 +12,7 @@ public class DataSet implements List<Instance> {
     final List<Descriptor> descriptors = []
 
     String name
+    int classAttributeIndex
 
     void addInstance(Instance instance){
         instance.dataSet = this
@@ -28,24 +29,25 @@ public class DataSet implements List<Instance> {
     void setClassAttributeIndex(int index){
         descriptors.each {it.classAttribute = false}
         descriptors[index].classAttribute = true
+        classAttributeIndex = index
     }
 
     int getClassAttributeIndex(){
-        for (int i = 0; i < descriptors.size(); i++) {
-            if (descriptors[i].classAttribute)
-                return i
-        }
-        throw new IllegalStateException("DataSet has no class attribute index")
+        classAttributeIndex
     }
 
-    Map<String, Integer> getClassDistribution(){
+    DiscreteDescriptor getClassDescriptor(){
+        return (descriptors[classAttributeIndex] as DiscreteDescriptor)
+    }
+
+    Map<Integer, Integer> getClassDistribution(){
         DiscreteDescriptor classDescriptor = (descriptors[getClassAttributeIndex()] as DiscreteDescriptor)
-        Map<String, Integer> distribution = [:]
-        classDescriptor.possibleValues.each {
+        Map<Integer, Integer> distribution = [:]
+        classDescriptor.possibleValues.size().times {
             distribution[it] = 0
         }
         instances.each { Instance it ->
-            distribution[it.classAttribute.stringValue]++
+            distribution[it.attributes[classAttributeIndex].intValue()]++
         }
         distribution
     }
@@ -60,6 +62,7 @@ public class DataSet implements List<Instance> {
         descriptors.each{ Descriptor it ->
             out.descriptors.add(it)
         }
+        out.setClassAttributeIndex(classAttributeIndex)
         out
     }
 

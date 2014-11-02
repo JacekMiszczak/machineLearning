@@ -11,6 +11,8 @@ public interface Discretizer {
 
     public DataSet discretizeAttribute(int index, DataSet dataSet)
 
+    public List<Double> calculateCutPoints(int index, DataSet dataSet)
+
 
 
 }

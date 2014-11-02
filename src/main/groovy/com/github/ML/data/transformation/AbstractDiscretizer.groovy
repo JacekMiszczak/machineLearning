@@ -10,6 +10,13 @@ import com.github.ML.data.descriptor.DiscreteDescriptor
 abstract class AbstractDiscretizer implements Discretizer {
 
     @Override
+    DataSet discretizeAttribute(int index, DataSet dataSet) {
+        DataSet out = dataSet.copy()
+        transformDataSet(calculateCutPoints(index, out), out, index)
+        out
+    }
+
+    @Override
     DataSet discretizeAll(DataSet dataSet) {
         def toDiscretize = []
         dataSet.descriptors.eachWithIndex { Descriptor descriptor, int i ->

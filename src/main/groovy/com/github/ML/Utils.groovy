@@ -3,6 +3,7 @@ package com.github.ML
 import com.github.ML.data.DataSet
 import com.github.ML.data.loader.ARFFLoader
 import com.github.ML.data.loader.Loader
+import com.github.ML.evaluation.Evaluation
 
 
 class Utils {
@@ -39,6 +40,34 @@ class Utils {
         Loader loader = new ARFFLoader()
         DataSet ds = loader.load(weather)
         return ds
+    }
+
+    static void printHeader(List<String> parameters, List<String> extras = []){
+        writeHeader(parameters, extras, System.out.newWriter())
+    }
+
+    static void writeHeader(List<String> parameters, List<String> extras = [], Writer writer){
+        StringBuilder sb = new StringBuilder()
+        (parameters + ["recall", "accuracy", "precision", "F-measure"] + extras).each {
+            sb.append("$it;")
+        }
+        sb.append(System.lineSeparator())
+        writer.write(sb.toString())
+        writer.flush()
+    }
+
+    static void printLine(List<String> parameters, Evaluation evaluation, List<String> extras = []){
+        writeLine(parameters, evaluation, extras, System.out.newWriter())
+    }
+
+    static void writeLine(List<String> parameters, Evaluation eval, List<String> extras = [], Writer writer){
+        StringBuilder sb = new StringBuilder()
+        (parameters + [eval.weightedRecall, eval.weightedAccuracy, eval.weightedPrecision, eval.weightedFMeasure] + extras).each {
+            sb.append("$it;")
+        }
+        sb.append(System.lineSeparator())
+        writer.write(sb.toString())
+        writer.flush()
     }
 
 }

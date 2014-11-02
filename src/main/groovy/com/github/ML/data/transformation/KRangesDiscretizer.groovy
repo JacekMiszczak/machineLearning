@@ -5,7 +5,7 @@ import com.github.ML.data.DataSet
 import groovy.transform.Canonical
 
 @Canonical
-class KBinsDiscretizer extends AbstractDiscretizer {
+class KRangesDiscretizer extends AbstractDiscretizer {
 
     int k
 
@@ -17,13 +17,14 @@ class KBinsDiscretizer extends AbstractDiscretizer {
 
         List<Double> cutPoints = []
         uniqueVals.sort()
-        int perBin = uniqueVals.size() / k
 
-        for (int i = 1; i < k; i++){
-            cutPoints.add(
-                    (uniqueVals[i*perBin] + uniqueVals[(i*perBin)-1]) / 2
-            )
+        double rangeSize = (uniqueVals[-1] - uniqueVals[0]) / k
+        double first = uniqueVals[0]
+        (k-1).times {
+            first += rangeSize
+            cutPoints.add(first)
         }
+
         cutPoints
     }
 }
