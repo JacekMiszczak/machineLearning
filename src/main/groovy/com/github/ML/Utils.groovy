@@ -1,6 +1,9 @@
 package com.github.ML
 
+import com.github.ML.classifier.Rule
+import com.github.ML.classifier.RuleSet
 import com.github.ML.data.DataSet
+import com.github.ML.data.descriptor.Descriptor
 import com.github.ML.data.loader.ARFFLoader
 import com.github.ML.data.loader.Loader
 import com.github.ML.evaluation.Evaluation
@@ -68,6 +71,25 @@ class Utils {
         sb.append(System.lineSeparator())
         writer.write(sb.toString())
         writer.flush()
+    }
+
+    static String prettyRule(Rule rule, DataSet dataSet){
+        StringBuilder sb = new StringBuilder()
+        sb.append("If")
+        rule.conditions.each {int k, int v ->
+            Descriptor desc = dataSet.descriptors[k]
+            sb.append(" ${desc.name} = ${desc.toStringValue(v)} and")
+        }
+        sb.delete(sb.size() - 4, sb.size())
+        Descriptor classDesc = dataSet.classDescriptor
+        sb.append(" then ${classDesc.name} = ${classDesc.toStringValue(rule.conclusion)}")
+        sb.toString()
+    }
+
+    static String prettyPrintRuleSet(RuleSet ruleSet, DataSet dataSet){
+        ruleSet.rules.each {
+            println prettyRule(it, dataSet)
+        }
     }
 
 }

@@ -29,7 +29,7 @@ public class DataSet implements List<Instance> {
     void setClassAttributeIndex(int index){
         descriptors.each {it.classAttribute = false}
         descriptors[index].classAttribute = true
-        classAttributeIndex = index
+        classAttributeIndex = index > 0 ? index : numAttributes+index
     }
 
     int getClassAttributeIndex(){
@@ -86,5 +86,18 @@ public class DataSet implements List<Instance> {
             it.attributes[index]
         }
         out.unique().toList()
+    }
+
+    int getNumAttributes(){
+        descriptors.size()
+    }
+
+    List<Integer> getNonClassAttributes(){             //todo: ugly, make it prettier
+        List<Integer> out = []
+        numAttributes.times {
+            if (it != classAttributeIndex)
+                out.add(it)
+        }
+        out
     }
 }

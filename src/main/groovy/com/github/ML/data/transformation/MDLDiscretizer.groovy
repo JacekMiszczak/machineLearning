@@ -12,7 +12,7 @@ import groovy.transform.Canonical
 class MDLDiscretizer extends AbstractDiscretizer {
 
     boolean depthCriterion = false
-    int maxDepth = 2 // you're going to end up with 2^(maxDepth) bins
+    int maxDepth = 2 // you're going to end up with up to 2^(maxDepth) bins
 
     //@Override
     List<Double> calculateCutPoints(int index, DataSet dataSet, int depth = maxDepth) {

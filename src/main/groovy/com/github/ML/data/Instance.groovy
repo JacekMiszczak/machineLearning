@@ -30,4 +30,8 @@ public class Instance {
         out
     }
 
+    public String toString(){
+        attributes.toString()
+    }
+
 }
