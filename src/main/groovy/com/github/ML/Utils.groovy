@@ -75,13 +75,17 @@ class Utils {
 
     static String prettyRule(Rule rule, DataSet dataSet){
         StringBuilder sb = new StringBuilder()
+        Descriptor classDesc = dataSet.classDescriptor
+        if (rule.conditions.isEmpty()){
+            sb.append("Otherwise ${classDesc.name} = ${classDesc.toStringValue(rule.conclusion)}")
+            return sb.toString()
+        }
         sb.append("If")
         rule.conditions.each {int k, int v ->
             Descriptor desc = dataSet.descriptors[k]
             sb.append(" ${desc.name} = ${desc.toStringValue(v)} and")
         }
         sb.delete(sb.size() - 4, sb.size())
-        Descriptor classDesc = dataSet.classDescriptor
         sb.append(" then ${classDesc.name} = ${classDesc.toStringValue(rule.conclusion)}")
         sb.toString()
     }

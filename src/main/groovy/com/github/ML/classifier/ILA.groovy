@@ -6,6 +6,8 @@ import com.github.ML.data.Instance
 
 class ILA implements ModelInducer {
 
+    boolean verbose = false
+
     @Override
     Classifier buildClassifier(DataSet dataSet) {
         List<Integer> nonClassAttributes = dataSet.nonClassAttributes
@@ -15,13 +17,14 @@ class ILA implements ModelInducer {
             !subtable.empty
         })
         RuleSet out = new RuleSet()
+        DataSet unclassifiable = dataSet.copyStructure()
         subtables.size().times {
             DataSet active = subtables.head().copy()
             List<DataSet> nonActive = subtables.tail()
             int combinationSize = 1
             while (!active.empty){
 
-                List<List<Integer>> partialPermutations = partialPermutations(nonClassAttributes, combinationSize)
+                List<List<Integer>> partialPermutations = kCombinations(nonClassAttributes, combinationSize)
                 List<Rule> allRules = []
                 for (int i = 0; i < partialPermutations.size(); i++) {
                     List<List<Number>> valuesForPermutation = []
@@ -31,11 +34,15 @@ class ILA implements ModelInducer {
                     allRules.addAll(rulesFromCombinations(valuesForPermutation, partialPermutations[i]))
 
                 }
-                List<Rule> filteredRules = filterRules(allRules, nonActive)
+                List<Rule> filteredRules = filterRules(allRules, active, nonActive)
 
                 if (!filteredRules){
                     if (combinationSize == nonClassAttributes.size()){
-                        println("Two identical elements have two different classes. Full classifier cannot be built.")
+                        if (verbose)
+                            println("Two identical elements have two different classes. Full classifier cannot be built.")
+                        active.each {
+                            unclassifiable.addInstance(it.copy())
+                        }
                         break
                     }
                     combinationSize++
@@ -49,16 +56,33 @@ class ILA implements ModelInducer {
                 })
                 active.instances.clear()
                 active.instances.addAll(remaining)
+//                println bestRule
                 out.add(bestRule)
             }
 
 
             subtables.add(subtables.remove(0))
         }
+        out.add(createFallbackRule(unclassifiable, dataSet))
         out
     }
 
 
+    private Rule createFallbackRule(DataSet remaining, DataSet all){
+        if (remaining.empty)
+            remaining = all
+        int mostFrequentClass = -1
+        int highestFrequency = -1
+        remaining.classDistribution.each {int k, int v ->
+            if (v > highestFrequency){
+                mostFrequentClass = k
+                highestFrequency = v
+            }
+        }
+        Rule out = new Rule()
+        out.conclusion = mostFrequentClass
+        out
+    }
 
     private List<DataSet> createSubtables(DataSet dataSet){
         List<DataSet> subtables = []
@@ -71,10 +95,14 @@ class ILA implements ModelInducer {
         subtables
     }
 
-    private List<List<Number>> partialPermutations(List<Number> list, int k){
-        Set<List<Number>> permutations = list.permutations()
-        permutations = permutations.collect({it.take(k).sort()})
-        return permutations.toList()
+    private List<List<Number>> kCombinations(List<Number> list, int k){
+       List<List<Number>> combinations = []
+        ([[true, false]]*list.size()).eachCombination {List <Boolean> combination ->
+            if (combination.count(true) == k){
+                combinations.add(combination.findIndexValues {it}.collect({list[it.toInteger()]}))
+            }
+        }
+        return combinations
     }
 
     private List<Rule> rulesFromCombinations(List<List<Number>> lists, List<Integer> attributeIdxs){
@@ -91,16 +119,17 @@ class ILA implements ModelInducer {
         out
     }
 
-    private List<Rule> filterRules(List<Rule> rules, List<DataSet> subtables){
-        List<Rule> out = []
-//        rules.each { Rule rule ->
-//            if (!(subtables.find { DataSet subtable ->
-//                onePasses(rule, subtable)
-//            }))
-//                out.add(rule)
-//        }
+    private List<Rule> filterRules(List<Rule> rules, DataSet active, List<DataSet> nonActive){
+        List<Rule> out
+        // first get rid of rules that no active instance passes, effectively ending up
+        // only with attribute combinations existing in active
         out = rules.grep({Rule rule ->
-            !(subtables.find { DataSet subtable ->
+            active.any({rule.instancePasses(it)})
+        })
+
+        // then get rid of rules, that any instance from non active tables passes
+        out = out.grep({Rule rule ->
+            !(nonActive.find { DataSet subtable ->
                 subtable.any({rule.instancePasses(it)})
             })
         })

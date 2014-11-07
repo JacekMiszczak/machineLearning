@@ -15,7 +15,7 @@ class CrossValidation{
 
         numFolds.times {
             Classifier classifier = inducer.buildClassifier(folds.tail().sum() as DataSet)
-            EvaluationUtils.evaluate(folds.head(), classifier, out)
+            out = EvaluationUtils.evaluate(folds.head(), classifier, out)
             folds.add(folds.remove(0))
         }
 

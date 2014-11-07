@@ -29,7 +29,7 @@ public class DataSet implements List<Instance> {
     void setClassAttributeIndex(int index){
         descriptors.each {it.classAttribute = false}
         descriptors[index].classAttribute = true
-        classAttributeIndex = index > 0 ? index : numAttributes+index
+        classAttributeIndex = index >= 0 ? index : numAttributes+index
     }
 
     int getClassAttributeIndex(){

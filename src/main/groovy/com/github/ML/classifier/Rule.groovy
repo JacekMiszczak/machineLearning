@@ -7,7 +7,7 @@ import groovy.transform.Canonical
 class Rule {
 
     Map<Integer, Integer> conditions = [:]
-    int conclusion
+    int conclusion = -1
 
     public boolean instancePasses(Instance instance){
         boolean res = true
@@ -26,6 +26,8 @@ class Rule {
 
     public String toString(){
         StringBuilder sb = new StringBuilder()
+        if (conditions.isEmpty())
+            return "Otherwise $conclusion"
         sb.append("if")
         conditions.each {int k, int v ->
             sb.append(" $k = $v and")
