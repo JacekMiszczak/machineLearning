@@ -24,7 +24,7 @@ class ILA implements ModelInducer {
             int combinationSize = 1
             while (!active.empty){
 
-                List<List<Integer>> partialPermutations = kCombinations(nonClassAttributes, combinationSize)
+                List<List<Integer>> partialPermutations = (kCombinations(nonClassAttributes, combinationSize) as List<List<Integer>>)
                 List<Rule> allRules = []
                 for (int i = 0; i < partialPermutations.size(); i++) {
                     List<List<Number>> valuesForPermutation = []
@@ -151,7 +151,7 @@ class ILA implements ModelInducer {
         Rule best = null
         rules.each { Rule rule ->
             int score = gradeRule(rule, table)
-            if (score > bestScore){
+            if (score >= bestScore){
                 bestScore = score
                 best = rule
             }
