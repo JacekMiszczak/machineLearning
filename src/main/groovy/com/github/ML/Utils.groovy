@@ -1,7 +1,7 @@
 package com.github.ML
 
-import com.github.ML.classifier.Rule
-import com.github.ML.classifier.RuleSet
+import com.github.ML.classifier.ila.Rule
+import com.github.ML.classifier.ila.RuleSet
 import com.github.ML.data.DataSet
 import com.github.ML.data.descriptor.Descriptor
 import com.github.ML.data.loader.ARFFLoader
@@ -19,6 +19,12 @@ class Utils {
 
     static DataSet getGlass(){
         File glass = new File(Utils.classLoader.getResource("glass.arff").toURI())
+        Loader loader = new ARFFLoader()
+        loader.load(glass)
+    }
+
+    static DataSet getGlassClean(){
+        File glass = new File(Utils.classLoader.getResource("glass.clean.arff").toURI())
         Loader loader = new ARFFLoader()
         loader.load(glass)
     }
@@ -42,6 +48,13 @@ class Utils {
         File weather = new File(Utils.classLoader.getResource("weather.nominal.arff").toURI())
         Loader loader = new ARFFLoader()
         DataSet ds = loader.load(weather)
+        return ds
+    }
+
+    static DataSet getDiabetes(){
+        File diabetes = new File(Utils.classLoader.getResource("diabetes.arff").toURI())
+        Loader loader = new ARFFLoader()
+        DataSet ds = loader.load(diabetes)
         return ds
     }
 

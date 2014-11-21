@@ -1,4 +1,4 @@
-package com.github.ML.classifier
+package com.github.ML.classifier.ila
 
 import com.github.ML.data.Instance
 import groovy.transform.Canonical

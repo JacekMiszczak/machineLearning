@@ -1,5 +1,7 @@
-package com.github.ML.classifier
+package com.github.ML.classifier.ila
 
+import com.github.ML.classifier.Classifier
+import com.github.ML.classifier.ModelInducer
 import com.github.ML.data.DataSet
 import com.github.ML.data.Instance
 

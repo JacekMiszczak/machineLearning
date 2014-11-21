@@ -1,5 +1,7 @@
-package com.github.ML.classifier
+package com.github.ML.classifier.ila
 
+import com.github.ML.classifier.AbstractClassifier
+import com.github.ML.classifier.ila.Rule
 import com.github.ML.data.Instance
 import groovy.transform.Canonical
 
