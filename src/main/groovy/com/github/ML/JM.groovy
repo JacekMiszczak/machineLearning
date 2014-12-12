@@ -7,7 +7,8 @@ import com.github.ML.evaluation.Evaluation
 import com.github.ML.evaluation.EvaluationUtils
 
 
-ds = Utils.iris
+ds = Utils.ionosphere
+
 
 knn = new KNN(5, KNN.euclideanDistance, KNN.equalVote)
 model = knn.buildClassifier(ds)

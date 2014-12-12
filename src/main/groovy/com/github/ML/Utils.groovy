@@ -58,6 +58,13 @@ class Utils {
         return ds
     }
 
+    static DataSet getIonosphere(){
+        File ionosphere = new File(Utils.classLoader.getResource("ionosphere.arff").toURI())
+        Loader loader = new ARFFLoader()
+        DataSet ds = loader.load(ionosphere)
+        return ds
+    }
+
     static void printHeader(List<String> parameters, List<String> extras = []){
         writeHeader(parameters, extras, System.out.newWriter())
     }
