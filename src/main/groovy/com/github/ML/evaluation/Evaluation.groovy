@@ -56,7 +56,9 @@ class Evaluation {
     }
 
     public float getPrecision(int i){
-        (results[i].tp / (results[i].tp + results[i].fp)) as float
+        if (results[i].tp + results[i].fp == 0)
+            return 0.0
+        return (results[i].tp / (results[i].tp + results[i].fp)) as float
     }
 
     public float getFMeasure(int i){
@@ -98,7 +100,8 @@ class Evaluation {
     public float getWeightedFMeasure(){
         float temp = 0
         results.size().times {
-            temp += getFMeasure(it)*getCountOfClass(it)
+            double f = getFMeasure(it).naN ? 0.0 : getFMeasure(it)
+            temp += f*getCountOfClass(it)
         }
         temp / getInstancesCount()
     }

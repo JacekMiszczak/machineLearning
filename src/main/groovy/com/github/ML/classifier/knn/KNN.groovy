@@ -61,18 +61,26 @@ class KNN implements ModelInducer {
 
     static Closure<Integer> weightedVote = {List<Pair<Instance, Double>> nearest ->
         Map<Integer, Double> scores = [:].withDefault {0}
+        nearest.each {Pair <Instance, Double> pair ->
+            scores[pair.first.classAttributeValue] += (1/pair.second)
+        }
+        return findMajorityVote(scores)
+    }
+
+    static Closure<Integer> expWeightedVote = {List<Pair<Instance, Double>> nearest ->                //does not work for big distances
+        Map<Integer, Double> scores = [:].withDefault {0}
         double sum = nearest.sum {Pair<Instance, Double> it -> Math.exp(-1 * it.second)}
         nearest.each {Pair <Instance, Double> pair ->
             scores[pair.first.classAttributeValue] += (Math.exp(-1 * pair.second) / sum)
         }
         return findMajorityVote(scores)
-
     }
+
 
     static Integer findMajorityVote(Map<Integer, Double> scores){
         int best = -1
         double bestScore = -1
-        scores.each {int clazz, int score ->
+        scores.each {int clazz, double score ->
             if (score > bestScore){
                 best = clazz
                 bestScore = score
